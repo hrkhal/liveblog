@@ -177,11 +177,6 @@ class Toolbar extends Component {
             icon="editor-ul"
             readOnly={readOnly}
           />
-          <Button
-            onMouseDown={() => this.toggleBlockType('blockquote')}
-            icon="format-quote"
-            readOnly={readOnly}
-          />
           <div style={{ position: 'relative', display: 'inline-block' }}>
             <Button
               onMouseDown={this.openLinkModal.bind(this)}

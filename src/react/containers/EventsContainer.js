@@ -49,7 +49,7 @@ class EventsContainer extends Component {
   }
 
   renderEvents() {
-    const { events, jumpToEvent, canEdit, utcOffset, dateFormat, title, config } = this.props;
+    const { events, jumpToEvent, canEdit, utcOffset, dateFormat, title } = this.props;
 
     return (
       <div>
@@ -64,9 +64,6 @@ class EventsContainer extends Component {
               canEdit={canEdit}
               utcOffset={utcOffset}
               dateFormat={dateFormat}
-              timeFormat={config.time_format}
-              displayDate={config.display_event_date}
-              disableFuzzy={config.disable_fuzzy_dates}
             />,
           )}
         </ul>
@@ -91,7 +88,6 @@ class EventsContainer extends Component {
 }
 
 EventsContainer.propTypes = {
-  config: PropTypes.object,
   getEvents: PropTypes.func,
   deleteEvent: PropTypes.func,
   jumpToEvent: PropTypes.func,
@@ -108,7 +104,6 @@ const mapStateToProps = state => ({
   utcOffset: state.config.utc_offset,
   events: state.events.entries,
   canEdit: state.config.is_liveblog_editable === '1',
-  config: state.config,
 });
 
 const mapDispatchToProps = dispatch =>

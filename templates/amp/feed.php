@@ -44,8 +44,6 @@ $social           = $settings['social'];
 				'social'         => $social,
 				'update_time'    => $entry->update_time,
 				'share_link_amp' => $entry->share_link_amp,
-				'headline'       => $entry->headline,
-				'subtitle'       => $entry->subtitle
 			)
 		);
 		?>

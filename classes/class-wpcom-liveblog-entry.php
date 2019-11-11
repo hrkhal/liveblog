@@ -24,18 +24,6 @@ class WPCOM_Liveblog_Entry {
 	 */
 	const HIDE_AUTHORS_KEY = 'liveblog_hide_authors';
 
-	/**
-	 * @var string Meta key for storing the headline, if any.
-	 */
-	const HEADLINE_META_KEY = 'liveblog_headline';
-
-
-		/**
-	 * @var string Meta key for storing the subtitle, if any.
-	 */
-	const SUBTITLE_META_KEY = 'liveblog_subtitle';
-
-
 	private $comment;
 	private $type = 'new';
 	private static $allowed_tags_for_entry;
@@ -146,8 +134,6 @@ class WPCOM_Liveblog_Entry {
 			'id'          => $entry_id,
 			'type'        => $this->get_type(),
 			'render'      => self::render_content( $this->get_content(), $this->comment ),
-			'headline'    => self::get_comment_headline_for_json( $entry_id ),
-			'subtitle'    => self::get_comment_subtitle_for_json( $entry_id ),
 			'content'     => apply_filters( 'liveblog_before_edit_entry', $this->get_content() ),
 			'css_classes' => $css_classes,
 			'timestamp'   => $this->get_timestamp(),
@@ -187,25 +173,6 @@ class WPCOM_Liveblog_Entry {
 			return $comment;
 		}
 
-		// Process key event checkbox
-		if ( class_exists('\WPCOM_Liveblog_Entry_Key_Events') && isset( $args['key_event'] ) ) {
-			if($args['key_event']){
-				add_comment_meta( $comment->comment_ID, \WPCOM_Liveblog_Entry_Key_Events::META_KEY, \WPCOM_Liveblog_Entry_Key_Events::META_VALUE );
-			} else {
-				delete_comment_meta( $comment->comment_ID, \WPCOM_Liveblog_Entry_Key_Events::META_KEY, \WPCOM_Liveblog_Entry_Key_Events::META_VALUE );
-			}
-		}
-		
-		// Add the headline as comment meta.
-		if ( isset( $args['headline'] ) ) {
-			update_comment_meta( $comment->comment_ID, self::HEADLINE_META_KEY, sanitize_text_field( $args['headline'] ) );
-		}
-
-		// Add the subtitle as comment meta.
-		if ( isset( $args['subtitle'] ) ) {
-			update_comment_meta( $comment->comment_ID, self::SUBTITLE_META_KEY, sanitize_text_field( $args['subtitle'] ) );
-		}
-
 		if ( isset( $args['contributor_ids'] ) ) {
 			self::add_contributors( $comment->comment_ID, $args['contributor_ids'] );
 		}
@@ -243,15 +210,6 @@ class WPCOM_Liveblog_Entry {
 
 		$args = apply_filters( 'liveblog_before_update_entry', $args );
 
-		// Process key event checkbox
-		if ( class_exists('\WPCOM_Liveblog_Entry_Key_Events') && isset( $args['key_event'] ) ) {
-			if($args['key_event']){
-				add_comment_meta( $args['entry_id'], \WPCOM_Liveblog_Entry_Key_Events::META_KEY, \WPCOM_Liveblog_Entry_Key_Events::META_VALUE );
-			} else {
-				delete_comment_meta( $args['entry_id'], \WPCOM_Liveblog_Entry_Key_Events::META_KEY, \WPCOM_Liveblog_Entry_Key_Events::META_VALUE );
-			}
-		}
-
 		$comment = self::insert_comment( $args );
 		if ( is_wp_error( $comment ) ) {
 			return $comment;
@@ -259,18 +217,6 @@ class WPCOM_Liveblog_Entry {
 
 		do_action( 'liveblog_update_entry', $comment->comment_ID, $args['post_id'] );
 		add_comment_meta( $comment->comment_ID, self::REPLACES_META_KEY, $args['entry_id'] );
-
-
-		// Add the headline as comment meta.
-		if ( isset( $args['headline'] ) ) {
-			update_comment_meta( $comment->comment_ID, self::HEADLINE_META_KEY, sanitize_text_field( $args['headline'] ) );
-		}
-
-		// Add the subtitle as comment meta.
-		if ( isset( $args['subtitle'] ) ) {
-			update_comment_meta( $comment->comment_ID, self::SUBTITLE_META_KEY, sanitize_text_field( $args['subtitle'] ) );
-		}
-		
 		wp_update_comment(
 			array(
 				'comment_ID'      => $args['entry_id'],
@@ -478,28 +424,6 @@ class WPCOM_Liveblog_Entry {
 			},
 			$contributors
 		);
-	}
-
-	/**
-	 * Returns a comment header.
-	 *
-	 * @param int $comment_id The comment id to retrive the metadata.
-	 */
-	private static function get_comment_headline_for_json( $comment_id ) {
-		$headline = get_comment_meta( $comment_id, self::HEADLINE_META_KEY, true );
-
-		return $headline ?: '';
-	}
-
-	/**
-	 * Returns a comment subtitle.
-	 *
-	 * @param int $comment_id The comment id to retrive the metadata.
-	 */
-	private static function get_comment_subtitle_for_json( $comment_id ) {
-		$subtitle = get_comment_meta( $comment_id, self::SUBTITLE_META_KEY, true );
-	
-		return $subtitle ?: '';
 	}
 
 	public static function get_userdata_with_filter( $author_id ) {

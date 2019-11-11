@@ -1,24 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { timeAgo, formattedTime } from '../utils/utils';
+import { timeAgo } from '../utils/utils';
 
-
-const Event = ({ event, click, onDelete, canEdit, utcOffset, dateFormat, timeFormat, disableFuzzy, displayDate}) => (
+const Event = ({ event, click, onDelete, canEdit, utcOffset, dateFormat }) => (
   <li className="liveblog-event">
     <div className="liveblog-event-body">
-      <div className="liveblog-event-meta" >
-        <span>
-        {
-          (disableFuzzy) 
-          ? formattedTime(event.entry_time, utcOffset, timeFormat)
-          : timeAgo(event.entry_time, utcOffset, dateFormat)   
-        }
-        </span>
-        {
-          (displayDate) &&
-          <span>{formattedTime(event.entry_time, utcOffset, dateFormat)}</span>
-        }
-      </div>
+      <div className="liveblog-event-meta" >{timeAgo(event.entry_time, utcOffset, dateFormat)}</div>
       <div>
         {
           canEdit &&
