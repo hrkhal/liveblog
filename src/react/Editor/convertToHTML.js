@@ -36,7 +36,6 @@ export default contentState =>
         return {
           start: '<li>',
           end: '</li>',
-          nest: '<ul>',
           nestStart: '<ul>',
           nestEnd: '</ul>',
         };
@@ -45,15 +44,8 @@ export default contentState =>
         return {
           start: '<li>',
           end: '</li>',
-          nest: '<ol>',
           nestStart: '<ol>',
           nestEnd: '</ol>',
-        };
-      }
-      if (block.type === 'blockquote') {
-        return {
-          start: '<blockquote>',
-          end: '</blockquote>',
         };
       }
       if (block.type === 'unstyled') {
@@ -62,9 +54,11 @@ export default contentState =>
       return <span />;
     },
     entityToHTML: (entity, originalText) => {
+      console.log(entity)
       if (entity.type === 'LINK') {
-        return <a href={entity.data.url}>{originalText}</a>;
+        return originalText;
       }
+
       if (entity.type === 'TEXT') {
         return React.createElement(
           entity.data.nodeName,
